@@ -1,15 +1,3 @@
-# Contracts Interface to Synthetix
-
-The official JavaScript library for interacting with Synthetix protocol contracts.
-
-This library can be used in 2 different environments:
-
-1. Common-js module for node environments
-2. UMD module for browser environments
-
-## Instantiating in node.js or the browser
-
-```javascript
 // For node environments:
 const { synthetix } = require('@synthetixio/contracts-interface');
 
@@ -22,45 +10,37 @@ import { synthetix } from '@synthetixio/contracts-interface';
 const { synthetix } = window;
 
 // Instantiate the library with or without a provider
-const hznjs = synthetix({ network: 'mainnet' });
+const fxpjs = synthetix({ network: 'mainnet' });
 
 // Note: for typescript applications
 import { synthetix, Network } from '@synthetixio/contracts-interface';
-const hznjs = synthetix({ network: Network.Mainnet });
-```
+const fxpjs = synthetix({ network: Network.Mainnet });
 
-## Reading state
-
-```javascript
-const hznjs = synthetix({ network: 'mainnet' });
+const fxp = synthetix({ network: 'mainnet' });
 
 // If you want to interact with a contract, simply follow the convention:
-// await hznjs[contractName].methodName(arguments)
+// await fxpjs[contractName].methodName(arguments)
 
-const owner = await hznjs.contracts.Synthetix.owner();
+const owner = await fxp.contracts.Synthetix.owner();
 
 // many arguments require being formatted toBytes32, which we also provide with the library
 
 const { toBytes32 } = snx;
 
-const totalIssuedSynths = await hznjs.contracts.Synthetix.totalIssuedSynths(toBytes32('sUSD'));
+const totalIssuedSynths = await fxp.contracts.Synthetix.totalIssuedSynths(toBytes32('sUSD'));
 
 // We also expose ethers utils which provides handy methods for formatting responses to queries.
-const { formatEther } = hznjs.utils;
+const { formatEther } = fxp.utils;
 
-formatEther(await hznjs.contracts.SynthsUSD.totalSupply());
+formatEther(await fxp.contracts.SynthsUSD.totalSupply());
 
-formatEther(await hznjs.contracts.ExchangeRates.rateForCurrency(hznjs.toBytes32('SNX')));
+formatEther(await fxp.contracts.ExchangeRates.rateForCurrency(fxp.toBytes32('SNX')));
 
 // Note can optionally pass in a { blockTag: someBlockNumber } to get data from a specific block instead of {}
-const snxAtBlock12m = await hznjs.contracts.ExchangeRates.rateForCurrency(hznjs.toBytes32('SNX'), {
+const snxAtBlock12m = await fxp.contracts.ExchangeRates.rateForCurrency(fxp.toBytes32('SNX'), {
   blockTag: 12e6,
 });
-```
 
-## Signing transactions
-
-```javascript
 // any old provider will do
 const provider = ethers.providers.getDefaultProvider('kovan');
 
@@ -72,10 +52,10 @@ const signer = new ethers.Wallet(
 );
 
 // and then instantiate synthetix with the signer
-const hznjs = synthetix({ network: 'mainnet', signer });
+const fxpjs = synthetix({ network: 'mainnet', signer });
 
 // mint 0.01 sETH via the NativeEtherWrapper
-const response = await hznjs.contracts.NativeEtherWrapper.mint({
+const response = await fxpjs.contracts.NativeEtherWrapper.mint({
   value: parseEther('0.01'),
   gasPrice: parseUnits('5', 'gwei'),
   gasLimit: 500e3,
@@ -83,6 +63,3 @@ const response = await hznjs.contracts.NativeEtherWrapper.mint({
 console.log('Submitted', response.hash);
 await response.wait();
 console.log('Mined', `https://etherscan.io/tx/${response.hash}`);
-```
-
-See the examples folder for more usage details.
